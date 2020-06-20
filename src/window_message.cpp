@@ -93,7 +93,8 @@ void Window_Message::ApplyTextInsertingCommands() {
 
 		// Apply commands that insert text
 		while (std::distance(text_index, text.begin()) <= -1) {
-			char ch = tolower(*text_index--);
+			char ch = *text_index--;
+			ch = (ch < 0x20 || ch > 0x7f ? ch : tolower(ch));
 			switch (ch) {
 			case 'n':
 			case 'v':
