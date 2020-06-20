@@ -30,15 +30,20 @@ namespace {
 	uint32_t GetRandomU32() { return rng(); }
 }
 
+template<class T>
+static T tolower_(T const& v) { return ((unsigned char)v < 0x80 ? tolower(v) : v); }
+template<class T>
+static T toupper_(T const& v) { return ((unsigned char)v < 0x80 ? toupper(v) : v); }
+
 std::string Utils::LowerCase(const std::string& str) {
 	std::string result = str;
-	std::transform(result.begin(), result.end(), result.begin(), tolower);
+	std::transform(result.begin(), result.end(), result.begin(), tolower_<char>);
 	return result;
 }
 
 std::string Utils::UpperCase(const std::string& str) {
 	std::string result = str;
-	std::transform(result.begin(), result.end(), result.begin(), toupper);
+	std::transform(result.begin(), result.end(), result.begin(), toupper_<char>);
 	return result;
 }
 
