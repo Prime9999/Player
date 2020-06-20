@@ -708,7 +708,22 @@ bool FileFinder::IsDirectory(const std::string& dir) {
 #  else
 	struct stat sb;
 	::lstat(dir.c_str(), &sb);
-	return S_ISDIR(sb.st_mode);
+	if (S_ISDIR(sb.st_mode)) {
+		return true;
+	}
+
+	if (S_ISLNK(sb.st_mode)) {
+		char buf_tmp[1024];
+		int link_len = ::readlink(dir.c_str(), buf_tmp, sizeof(buf_tmp) - 1);
+		if (link_len == -1) {
+			return false;
+		}
+		buf_tmp[link_len] = '\0';
+		::lstat(buf_tmp, &sb);
+		return S_ISDIR(sb.st_mode);
+	}
+
+	return false;
 #  endif
 #endif
 }
